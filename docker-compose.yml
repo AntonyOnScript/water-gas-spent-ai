@@ -1,0 +1,37 @@
+name: water-gas-spent-ai
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: water-gas-api
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      - ./node_modules:/app/node_modules
+    command: sh -c "yarn && yarn serve"
+    ports:
+      - "80:3000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=mysql://root:root@mariadb:3306/water-gas
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    networks:
+      - app-net
+    depends_on:
+      - db
+  db:
+    image: mariadb
+    container_name: water-gas-db
+    ports:
+      - 3306:3306
+    environment: 
+      MARIADB_ROOT_PASSWORD: root
+    networks:
+      - app-net   
+ 
+networks:
+  app-net:
+    driver: bridge
