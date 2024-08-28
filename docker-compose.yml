@@ -16,7 +16,7 @@ services:
       - "80:3000"
     environment:
       - NODE_ENV=development
-      - DATABASE_URL=mysql://root:root@mariadb:3306/water-gas
+      - DATABASE_URL=mysql://root:root@water-gas-db:3306/water-gas
       - GEMINI_API_KEY=${GEMINI_API_KEY}
     networks:
       - app-net
