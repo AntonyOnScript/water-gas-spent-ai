@@ -1,5 +1,5 @@
-import express, { Router } from "express";
-import { list } from "./controllers/Measure";
+import express, { Router } from 'express'
+import { list } from './controllers/Measure'
 
 const router: Router = express.Router()
 
