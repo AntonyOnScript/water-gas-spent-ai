@@ -8,7 +8,5 @@ until npx prisma db push; do
   sleep 2
 done
 
-npx prisma migrate deploy
-
 # continue docker command
 exec "$@"

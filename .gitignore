@@ -2,7 +2,7 @@ node_modules
 # Keep environment variables out of version control
 dist
 src/models/migrations/*
-!src/models/migrations/*_init 
+!src/models/migrations/*_baseline
 !src/models/migrations/migration_lock.toml
 .env
 tmp/*
