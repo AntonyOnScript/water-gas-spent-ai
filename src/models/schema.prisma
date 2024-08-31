@@ -16,7 +16,7 @@ model Measure {
     measure_uuid String @unique @id @default(uuid())
     measure_datetime DateTime
     measure_type MeasureType
-    measure_value Int
+    measure_value String
     customer_code String
     has_confirmed Boolean @default(false)
     image_url String @db.LongText
