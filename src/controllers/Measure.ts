@@ -123,7 +123,36 @@ const getImage = async (req: Request, res: Response) => {
 }
 
 const confirm = async (req: Request, res: Response) => {
-    console.log(req, res)
+    const { measure_uuid, confirmed_value } = req.body
+    const dataTarget = await prisma.measure.findFirst({
+        where: {
+            measure_uuid,
+        },
+    })
+    if (!dataTarget) {
+        return res.status(404).json({
+            error_code: 'MEASURE_NOT_FOUND',
+            error_description: 'Leitura não encontrada',
+        })
+    }
+    if (dataTarget.has_confirmed) {
+        return res.status(409).json({
+            error_code: 'CONFIRMATION_DUPLICATE',
+            error_description: 'Leitura já confirmada',
+        })
+    }
+    await prisma.measure.update({
+        where: {
+            measure_uuid,
+        },
+        data: {
+            measure_value: confirmed_value,
+            has_confirmed: true,
+        },
+    })
+    res.status(200).json({
+        success: true,
+    })
 }
 
 const deleteAllGeminiFiles = async (req: Request, res: Response) => {

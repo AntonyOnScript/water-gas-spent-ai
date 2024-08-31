@@ -20,6 +20,11 @@ const userSchema = Joi.object({
         .required(),
 })
 
+const confirmBodySchema = Joi.object({
+    measure_uuid: Joi.string().required(),
+    confirmed_value: Joi.number().required(),
+})
+
 export const validateUploadBody = (
     req: Request,
     res: Response,
@@ -58,6 +63,24 @@ export const canUserUpload = async (
         return res.status(400).json({
             error_code: 'DOUBLE_REPORT',
             error_description: 'Leitura do mês já realizada',
+        })
+    }
+
+    next()
+}
+
+export const validateConfirmBody = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { error } = confirmBodySchema.validate(req.body)
+    if (error) {
+        console.log('error: ', error.details[0].message)
+        return res.status(400).json({
+            error_code: 'INVALID_DATA',
+            error_description:
+                'Os dados fornecidos no corpo da requisição são inválidos',
         })
     }
 
