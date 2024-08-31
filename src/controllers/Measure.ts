@@ -8,6 +8,7 @@ import path from 'path'
 const prisma = new PrismaClient()
 const tmpImagesFolderPath = path.join(__dirname, '..', '..', 'tmp')
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY ?? ''
+
 interface ListWhereOptions {
     customer_code: string
     measure_type?: MeasureType
@@ -60,7 +61,7 @@ const create = async (req: Request, res: Response) => {
     } = req.body
 
     const fileManager = new GoogleAIFileManager(GEMINI_API_KEY as string)
-    const promptText = `Return only the number value of the ${measure_type.toLocaleLowerCase() === 'water' ? 'water' : 'gas'} measure in cubic meters without any character but numbers. if it's not a measurer image, return 0.`
+    const promptText = `Return only the number value of the ${measure_type.toLocaleLowerCase() === 'water' ? 'water' : 'gas'} measure in cubic meters without any character but numbers and float point separing decimals. decimals are commonly represented by red numbers or numbers with a red background. if it's not a measurer image, return 0.0`
     const imageMime = getMimeType(image)
     const filename = `${customer_code}-${Date.now()}.${imageMime.split('/')[1]}`
     try {
@@ -84,7 +85,9 @@ const create = async (req: Request, res: Response) => {
                 text: promptText,
             },
         ])
-        const measureValue = result.response.text().replace('\n', '')
+        const measureValue = Number.parseFloat(
+            result.response.text().replace('\n', '')
+        )
         fileManager.deleteFile(uploadResponse.file.name)
         const data = await prisma.measure.create({
             data: {
