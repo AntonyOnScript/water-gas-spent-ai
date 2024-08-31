@@ -105,10 +105,9 @@ const create = async (req: Request, res: Response) => {
             measure_value: data.measure_value,
         })
     } catch (err) {
-        console.log(err)
+        console.log('error: ', err)
         res.status(400).json(err)
     }
-    // fs.rm(path.join(tmpImagesFolderPath, filename), () => {})
 }
 
 const getImage = async (req: Request, res: Response) => {
