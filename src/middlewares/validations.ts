@@ -9,7 +9,7 @@ interface CountPrismaQuery {
     count: bigint
 }
 
-const userSchema = Joi.object({
+const uploadBodySchema = Joi.object({
     image: Joi.string().required(),
     customer_code: Joi.string().required(),
     measure_datetime: Joi.string().required(),
@@ -30,7 +30,7 @@ export const validateUploadBody = (
     res: Response,
     next: NextFunction
 ) => {
-    const { error } = userSchema.validate(req.body)
+    const { error } = uploadBodySchema.validate(req.body)
     if (error || !isBase64(req.body.image, { allowMime: true })) {
         if (error) {
             console.log('error: ', error.details[0].message)
